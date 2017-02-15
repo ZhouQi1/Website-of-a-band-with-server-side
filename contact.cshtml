@@ -1,0 +1,42 @@
+@{Layout="SiteLayout.cshtml";}
+@{
+    var clientName="";
+    var clientEmail="";
+    var message="";
+    if(IsPost){
+        clientName=Request.Form["clientName"];
+        clientEmail=Request.Form["clientEmail"];
+        message=Request.Form["clientMessage"];
+        var SQLINSERT="INSERT INTO clientInfo (clientName,clientEmail,message) VALUES (@0,@1,@2)";
+        var db=Database.Open("Band");
+        db.Execute(SQLINSERT,clientName,clientEmail,message); 
+        try{
+            WebMail.Send(to:clientEmail,subject:"thanks for your message",body:"We will reply to you for your message: "+message,from:"zhouqicpc@163.com");            
+        }
+        catch(Exception ex)
+        {
+            <text>@ex</text>
+        }  
+    }
+}
+	<article>
+		<h1>Contact the band</h1>
+		<form method="post" action="">
+			<fieldset>
+				<p>
+					<label for="clienName">Name:</label>
+					<input type="text" id="name" name="clientName" placeholder="Your name" required="required"/>
+				</p>
+				<p>
+					<label for="clientEmail">Email:</label>
+					<input type="email" id="email" name="clientEmail" placeholder="Your email address" required="required"/>
+				</p>
+				<p>
+					<label for="clientMessage">Message:</label>
+					<textarea cols="45" rows="7" id="message" name="clientMessage" required="required" placeholder="Write your message here"></textarea>                   
+				</p>
+				<input type="submit" value="Send"/>
+			</fieldset>
+		</form>
+	</article>
+	

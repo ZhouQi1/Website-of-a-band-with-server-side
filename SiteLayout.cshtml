@@ -1,0 +1,31 @@
+﻿
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Jay Skript</title>
+        <link rel="stylesheet" media="screen" href="styles/basic.css" />
+        <script src="scripts/modernizr-1.6.min.js"></script>
+    </head>
+    <body>
+        <header>
+		    <img src="images/logo.gif" alt="Jay Skript and the Domsters" />
+		    <nav>
+			    <ul>
+				    <li><a href="index.cshtml" class="here">HOME</a></li>
+				    <li><a href="about.cshtml">About</a></li>
+				    <li><a href="photos.cshtml">Photos</a></li>
+				    <li><a href="live.cshtml">Live</a></li>
+				    <li><a href="contact.cshtml">Contact</a></li>
+			    </ul>
+		    </nav>
+	    </header>
+        @RenderBody()
+        <footer>
+            this site was built using Microsoft WebMatrix.
+            <a href="http://web.ms/webmatrix">Download it now</a>
+        </footer>
+        <script src="scripts/global.js"></script>
+    </body>
+</html>
