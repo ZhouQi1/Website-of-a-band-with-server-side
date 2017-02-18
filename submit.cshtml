@@ -1,4 +1,25 @@
 @{Layout="SiteLayout.cshtml";}
+@{
+    var clientName="";
+    var clientEmail="";
+    var message="";
+    if(IsPost){
+        clientName=Request.Form["clientName"];
+        clientEmail=Request.Form["clientEmail"];
+        message=Request.Form["clientMessage"];
+        var SQLINSERT="INSERT INTO clientInfo (clientName,clientEmail,message) VALUES (@0,@1,@2)";
+        var db=Database.Open("Band");
+        db.Execute(SQLINSERT,clientName,clientEmail,message); 
+        try{
+            WebMail.Send(to:clientEmail,subject:"thanks for your message",body:"We will reply to you for your message: "+message,from:"zhouqicpc@163.com");            
+        }
+        catch(Exception ex)
+        {
+            <text>@ex</text>
+        }  
+    }
+}
+
 	<article>
 		<h1>Thanks!</h1>
 		<p>Thanks for contacting us. We'll get back to you as soon as we can.</p>

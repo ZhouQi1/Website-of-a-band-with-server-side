@@ -398,9 +398,7 @@ function prepareForms(){
 		thisform.onsubmit = function() {
 			if(!validateForm(thisform)) return false;
 			var article = document.getElementsByTagName('article')[0];
-
-		      if (submitFormWithAjax(this, article)) return false;
-
+		      if (submitFormWithAjax(this, article)) return true;
 		      return true;
 		}
 	}
@@ -444,15 +442,20 @@ function submitFormWithAjax(whichform,thetarget){
 	var data=dataParts.join('&');
 	request.open('POST',whichform.getAttribute("action"),true);
 	request.setRequestHeader("Content-type","application/x-www-form-urlencoded")
-	request.onreadystatechange=function(){
-		if(request.readyState==4){
-			if(request.status==200||request.status==0){
-				var matchs=request.responseText.match(/<article>([\s\S]+)<\/article>/);
-				thetarget.innerHTML ='<p> Opps </p>';
-			}else{
-				thetarget.innerHTML='<p>' +request.statusText+'</p>';
-			}
-		}
+	request.onreadystatechange = function () {
+	    if (request.readyState == 4) {
+	        if (request.status == 200 || request.status == 0) {
+	            var matchs = request.responseText.match(/<article>([\s\S]+)<\/article>/);
+	            if (matchs.length > 0) {
+	                thetarget.innerHTML = matchs[1];
+	            } else {
+	                thetarget.innerHTML = '<p> Opps! there ia a error</p>';
+	            }
+
+	        } else {
+	            thetarget.innerHTML = '<p>' + request.statusText + '</p>';
+	        }
+	    }
 	}
 	request.send(data)
 	return true;
