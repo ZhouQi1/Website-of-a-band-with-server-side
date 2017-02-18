@@ -19,7 +19,7 @@ function insertAfter(newElement,targetElement){
 		parent.insertBefore(newElement,targetElement.nextSibling)
 	}
 }
-
+/*
  function addClass(element,value){
  	if(!element.className){
  		element.className=value;
@@ -30,7 +30,7 @@ function insertAfter(newElement,targetElement){
  		element.className=newClassName;
  	}
  }
- 
+ */  //采用jQuery中的
  function highlightPage(){
  	var headers=document.getElementsByTagName("header");
  	var navs=headers[0].getElementsByTagName("nav");
@@ -211,10 +211,10 @@ function prepareGallery() {
 	}
 }
 
-
+//Live
 function stripeTables(){
 	if(!document.getElementsByTagName) return false;
-	var tables=document.getElementsByTagName("table");
+	/*var tables=document.getElementsByTagName("table");
 	for(var i=0;i<tables.length;i++){
 		var odd=false;
 		var rows=tables[i].getElementsByTagName("tr");
@@ -225,28 +225,44 @@ function stripeTables(){
 			}else{
 	            odd=true;
 			}
-		}
-	}
+		}  //以上代码可用jquery选择器代替
+	    
+	}*/
+    $("table").each(function(){
+        $("tr:odd").addClass("odd");
+    })
+    
 }
 function highlightRows(){
-	if(!document.getElementsByTagName) return false;
+	/*if(!document.getElementsByTagName) return false;
 	var tables=document.getElementsByTagName("table");
-	for (var i=0;i<tables.length;i++)
-		var rows=tables[i].getElementsByTagName("tr");
-	    for(var j=0;j<rows.length;j++){
-	    	rows[j].oddClassName=rows[j].className;
-	    	rows[j].onmouseover=function(){
-	    		addClass(this,"highlight")
-	    	}
-	    	rows[j].onmouseout=function(){
-	    		this.className=this.oddClassName
-	    	}
+	for (var i = 0; i < tables.length; i++) {
+	    var rows = tables[i].getElementsByTagName("tr");
+	    for (var j = 0; j < rows.length; j++) {
+	        rows[j].oddClassName = rows[j].className;
+	        rows[j].onmouseover = function () {
+	            addClass(this, "highlight");
+	        }
+	        rows[j].onmouseout = function () {
+	            this.className = this.oddClassName
+	        }
 	    }
+	}*/  //以上代码也可用jquery的选择器代替
+    $("table").each(function(){
+        $("tr").mouseover(function(){
+            $(this).addClass("highlight");
+        })
+    })
+    $("table").each(function(){
+        $("tr").mouseout(function(){
+            $(this).removeClass("highlight");
+        })
+    })
+    
 }
 
-
 function displayAbbreviations(){
-	if(!document.getElementsByTagName||!document.createElement||!document.createTextNode) return false;
+	/*if(!document.getElementsByTagName||!document.createElement||!document.createTextNode) return false;
 	var abbreviations=document.getElementsByTagName("abbr");
 	if(abbreviations.length<1) return false;
 	var defs=new Array();
@@ -277,8 +293,29 @@ function displayAbbreviations(){
 	var container=articles[0];
 	container.appendChild(header);
 	container.appendChild(dlist);
+    */ //以上代码也可用jquery的选择器代替
+    var desc = $("abbr").map(function () {
+        return $(this).attr('title')
+    }).get();
+    var term = $("abbr").map(function () {
+        return $(this).text()
+    }).get();
+    /*var data = $("abbr").map(function () {
+        return {
+            desc: $(this).attr('title'),
+            term: $(this).text()
+        };
+    }).toArray();*/  //jquery 模板插件可以声明一些特殊变量，如${term}
+    if (desc.length < 1) return false;
+    var data='<dl>';
+    for (var i = 0; i < desc.length;i++ ){
+        data = data + '<dt>' + term[i] + '</dt>' + '<dd>' + desc[i] + '</dd>';
+    }
+    data = data + '</dl>';
+    $('<h2>Abbreviations</h2>').appendTo("article");
+    $(data).appendTo("article");
 }
-
+//contact
 function focusLabels(){
 	if(!document.getElementsByTagName) return false;
 	var labels=document.getElementsByTagName("label");
@@ -288,33 +325,43 @@ function focusLabels(){
 			var id=this.getAttribute("for");
 			if(!document.getElementById) return false;
 			var element=document.getElementById(id);
-			element.focus();
+			element.focus();            
 		}
 	}
 }
 
 
 function resetFields(whichform){
-	for(var i=0;i<whichform.elements.length;i++){
+	/*for(var i=0;i<whichform.elements.length;i++){
 		var element=whichform.elements[i];
 		if(element.getAttribute("type")=="submit") continue;
 		if (!element.getAttribute('placeholder')) continue;
-
 		element.onfocus=function(){
-			var text=this.placeholder||this.getAttribute("placeholder");
-			if(this.value==text){
-				this.className='';
-				this.value="";
+		    var text=this.placeholder||this.getAttribute("placeholder");
+		    if(this.value==text){
+			    this.className='';
+			    this.value="";
 			    }
+		}
+		element.onblur=function(){
+			if(this.value==""){
+				this.className='placeholder';
+				this.value=this.placeholder||this.getAttribute('placeholder');
 			}
-			element.onblur=function(){
-				if(this.value==""){
-					this.className='placeholder';
-					this.value=this.placeholder||this.getAttribute('placeholder');
-				}
-			}
+		}
 		element.onblur();
-	}
+	}*/ //以上代码也可用jquery的选择器代替
+	$('form input[placeholder]').focus(function () {
+	    var input = $(this);
+	    if (input.val() == input.attr("placeholder")) {
+	        input.val('').removeClass("placeholder");
+	    }
+	}).blur(function () {
+	    var input = $(this);
+	    if (input.val == '') {
+	        input.val(input.attr('placeholder')).addClass('placeholder');
+	    }
+	}).blur();
 }
 
 

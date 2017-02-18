@@ -131,6 +131,6 @@ tr.highlight td{
   background-color: #cba;
 }
 
-input.placeholder{
-  color: black;
+input.placeholder,textarea.placeholder{
+  color: gray;
 }
